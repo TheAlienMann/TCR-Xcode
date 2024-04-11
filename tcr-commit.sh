@@ -5,13 +5,18 @@
 # SPDX-License-Identifier: MIT
 
 read -r -d '' applescript <<'EndOfScript'
-   set commitMessage to text returned of (display dialog "Commit message:" default answer "" buttons {"Commit"} default button "Commit")
+   set commitMessage to text returned of (display dialog "Commit message:" default answer "working" buttons {"Commit"} default button "Commit")
    return commitMessage
 EndOfScript
 
-commitMessage=$(osascript -e "$applescript")
-if [[ -z $commitMessage ]]; then
-   exit 1
-fi
+# commitMessage=$(osascript -e "$applescript")
+# if [[ -z $commitMessage ]]; then
+#    exit 1
+# fi
 
-git add . && git commit -m "$commitMessage"
+# git add . && git commit -m "$commitMessage"
+
+if ! git diff-index --quit HEAD --; then
+   commitMessage=$(osascript -e "$applescript")
+   git add . && git commit -am "$commitMessage"
+fi
